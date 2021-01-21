@@ -1,0 +1,43 @@
+[
+    {
+       "currentState":"pending",
+       "summary":"task 1",
+       "description":"this is task 1",
+       "createdOn":"28/9/2020",
+       "dueDate":"28/9/2020",
+       "priority":"low"
+    },
+    {
+       "currentState":"pending",
+       "summary":"task 2",
+       "description":"this is task 2",
+       "createdOn":"28/9/2020",
+       "dueDate":"28/9/2020",
+       "priority":"low"
+    },
+    {
+       "currentState":"completed",
+       "summary":"task 3",
+       "description":"this is task 3",
+       "createdOn":"28/9/2020",
+       "dueDate":"28/9/2020",
+       "priority":"low"
+    },
+    {
+       "currentState":"pending",
+       "summary":"task 4",
+       "description":"this is task 4",
+       "createdOn":"28/9/2020",
+       "dueDate":"28/9/2020",
+       "priority":"low"
+    },
+    {
+       "currentState":"completed",
+       "summary":"task 5",
+       "description":"this is task 5",
+       "createdOn":"28/9/2020",
+       "dueDate":"28/9/2020",
+       "priority":"low"
+    }
+
+]
