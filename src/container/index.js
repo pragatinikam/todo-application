@@ -132,13 +132,18 @@ export default function ToDo() {
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
 
-    let pendingTask = null; let dummyState = ""
+    let pendingTask = null, noneTask = null, lowTask = null, mediumTask = null, highTask = null; let dummyState = ""
     if (value === 1) dummyState = "pending"
     if (value === 2) dummyState = "completed"
     pendingTask = taskItems.filter(task => task.currentState === dummyState);
     let completedTask = null
     completedTask = taskItems.filter(task => task.currentState === dummyState);
-
+    if (groupBy === "priority") {
+        noneTask = taskItems.filter(task => task.priority === "None");
+        lowTask = taskItems.filter(task => task.priority === "Low");
+        mediumTask = taskItems.filter(task => task.priority === "Medium");
+        highTask = taskItems.filter(task => task.priority === "High");
+    }
     const addItems = (params) => {
         const newItem = params;
         const newItems = [...taskItems, newItem];
@@ -153,7 +158,7 @@ export default function ToDo() {
         })
         setOpenAddDialog(false)
     };
-    console.log("value", value)
+    console.log("value", groupBy)
     const deleteItem = (key) => {
         const filteredItems = taskItems.filter(item => item.createdOn !== key);
         setTaskItems(filteredItems)
@@ -222,64 +227,157 @@ export default function ToDo() {
                             <Grid className={classes.grids} item lg={2}>Due By</Grid>
                             <Grid className={classes.grids} item lg={3}>Actions</Grid>
                         </Grid>
-                        {value === 0 && taskItems.map((data, i) => {
-                            return (
-                                <Grid container>
-                                    <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
-                                    <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
-                                        <div onClick={() => editItem(data)}>
-                                            <EditButton />
-                                        </div>
-                                        <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
-                                        <div onClick={() => deleteItem(data.createdOn)}>
-                                            <DeleteButton />
-                                        </div>
-                                    </Grid>
-                                </Grid>
-                            )
-                        })}
-                        {value === 1 && pendingTask.map((data, i) => {
-                            return (
-                                <Grid container>
-                                    <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
-                                    <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
-                                        <div onClick={() => editItem(data)}>
-                                            <EditButton />
-                                        </div>
-                                        <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
-                                        <div onClick={() => deleteItem(data.createdOn)}>
-                                            <DeleteButton />
-                                        </div>
-                                    </Grid>
-                                </Grid>
-                            )
-                        })}
-                        {value === 2 && completedTask.map((data, i) => {
-                            return (
-                                <Grid container>
-                                    <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
-                                    <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
-                                    <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
-                                        <div onClick={() => editItem(data)}>
-                                            <EditButton />
-                                        </div>
-                                        <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
-                                        <div onClick={() => deleteItem(data.createdOn)}>
-                                            <DeleteButton />
-                                        </div>
-                                    </Grid>
-                                </Grid>
-                            )
-                        })}
-                      
+                        {
+                            groupBy === "priority" ?
+
+                                <div>
+                                    <Grid container style={{ textTransform: "uppercase", textAlign: "center", width: "100%", fontWeight: "bold" }}>Low</Grid>
+                                    {
+                                        lowTask.map((data, i) => {
+                                            return (
+                                                <Grid container>
+                                                    <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
+                                                    <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
+                                                        <div onClick={() => editItem(data)}>
+                                                            <EditButton />
+                                                        </div>
+                                                        <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
+                                                        <div onClick={() => deleteItem(data.createdOn)}>
+                                                            <DeleteButton />
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            )
+                                        })}
+                                    <Grid container style={{ textTransform: "uppercase", textAlign: "center", fontWeight: "bold" }}>Medium</Grid>
+                                    {
+                                        mediumTask.map((data, i) => {
+                                            return (
+                                                <Grid container>
+                                                    <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
+                                                    <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
+                                                        <div onClick={() => editItem(data)}>
+                                                            <EditButton />
+                                                        </div>
+                                                        <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
+                                                        <div onClick={() => deleteItem(data.createdOn)}>
+                                                            <DeleteButton />
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            )
+                                        })}
+                                    <Grid container style={{ textTransform: "uppercase", textAlign: "center", fontWeight: "bold" }}>None</Grid>
+                                    {
+                                        noneTask.map((data, i) => {
+                                            return (
+                                                <Grid container>
+                                                    <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
+                                                    <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
+                                                        <div onClick={() => editItem(data)}>
+                                                            <EditButton />
+                                                        </div>
+                                                        <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
+                                                        <div onClick={() => deleteItem(data.createdOn)}>
+                                                            <DeleteButton />
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            )
+                                        })}
+                                    <Grid container style={{ textTransform: "uppercase", textAlign: "center", fontWeight: "bold" }}>High</Grid>
+                                    {
+                                        highTask.map((data, i) => {
+                                            return (
+                                                <Grid container>
+                                                    <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
+                                                    <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
+                                                    <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
+                                                        <div onClick={() => editItem(data)}>
+                                                            <EditButton />
+                                                        </div>
+                                                        <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
+                                                        <div onClick={() => deleteItem(data.createdOn)}>
+                                                            <DeleteButton />
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
+                                            )
+                                        })}
+                                </div>
+                                : <div>{value === 0 && taskItems.map((data, i) => {
+                                    return (
+                                        <Grid container>
+                                            <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
+                                            <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
+                                            <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
+                                            <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
+                                            <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
+                                                <div onClick={() => editItem(data)}>
+                                                    <EditButton />
+                                                </div>
+                                                <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
+                                                <div onClick={() => deleteItem(data.createdOn)}>
+                                                    <DeleteButton />
+                                                </div>
+                                            </Grid>
+                                        </Grid>
+                                    )
+                                })}
+                                    {value === 1 && pendingTask.map((data, i) => {
+                                        return (
+                                            <Grid container>
+                                                <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
+                                                <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
+                                                <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
+                                                <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
+                                                <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
+                                                    <div onClick={() => editItem(data)}>
+                                                        <EditButton />
+                                                    </div>
+                                                    <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
+                                                    <div onClick={() => deleteItem(data.createdOn)}>
+                                                        <DeleteButton />
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    })}
+                                    {value === 2 && completedTask.map((data, i) => {
+                                        return (
+                                            <Grid container>
+                                                <Grid className={classes.grids} item md={3}>{data.summary}</Grid>
+                                                <Grid className={classes.grids} item md={2}>{data.priority}</Grid>
+                                                <Grid className={classes.grids} item md={2}>{moment(data.createdOn).format('L')}</Grid>
+                                                <Grid className={classes.grids} item md={2}>{moment(data.dueDate).format('L')}</Grid>
+                                                <Grid className={classes.grids} style={{ display: "flex", justifyContent: "space-evenly" }} item md={3}>
+                                                    <div onClick={() => editItem(data)}>
+                                                        <EditButton />
+                                                    </div>
+                                                    <div>{data.currentState === "pending" ? <div onClick={() => data.currentState = "completed"}><SaveButton>Done</SaveButton></div> : <div onClick={() => data.currentState = "pending"}><OpenButton>Open</OpenButton></div>}</div>
+                                                    <div onClick={() => deleteItem(data.createdOn)}>
+                                                        <DeleteButton />
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    })}
+                                </div>
+                        }
+
+
+
                     </table>
                     <Dialog aria-labelledby="customized-dialog-title" open={openEditDialog}>
                         <DialogTitle id="customized-dialog-title" onClose={handleCloseEdit}>
@@ -484,9 +582,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         minWidth: "200px",
         scrollX: "auto",
-        // justifyContent: "center",
+        //  justifyContent: "center",
         alignItems: "center"
     }
 }));
-
-
